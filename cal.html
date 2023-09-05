@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Calculator</title>
+</head>
+<body>
+    <h1>Simple Calculator</h1>
+
+    <input type="text" id="display" readonly>
+
+    <table>
+        <tr>
+            <td><button onclick="appendToDisplay('1')">1</button></td>
+            <td><button onclick="appendToDisplay('2')">2</button></td>
+            <td><button onclick="appendToDisplay('3')">3</button></td>
+            <td><button onclick="clearDisplay()">C</button></td>
+        </tr>
+        <tr>
+            <td><button onclick="appendToDisplay('4')">4</button></td>
+            <td><button onclick="appendToDisplay('5')">5</button></td>
+            <td><button onclick="appendToDisplay('6')">6</button></td>
+            <td><button onclick="operate('+')">+</button></td>
+        </tr>
+        <tr>
+            <td><button onclick="appendToDisplay('7')">7</button></td>
+            <td><button onclick="appendToDisplay('8')">8</button></td>
+            <td><button onclick="appendToDisplay('9')">9</button></td>
+            <td><button onclick="operate('-')">-</button></td>
+        </tr>
+        <tr>
+            <td><button onclick="appendToDisplay('0')">0</button></td>
+            <td><button onclick="appendToDisplay('.')">.</button></td>
+            <td><button onclick="calculate()">=</button></td>
+            <td><button onclick="operate('*')">*</button></td>
+        </tr>
+        <tr>
+            <td colspan="4"><button onclick="operate('/')">/</button></td>
+        </tr>
+    </table>
+
+    <script>
+        let currentInput = '';
+        let currentOperator = '';
+        let firstOperand = '';
+
+        function appendToDisplay(value) {
+            currentInput += value;
+            document.getElementById('display').value = currentInput;
+        }
+
+        function clearDisplay() {
+            currentInput = '';
+            currentOperator = '';
+            firstOperand = '';
+            document.getElementById('display').value = '';
+        }
+
+        function operate(operator) {
+            if (currentInput !== '') {
+                if (firstOperand === '') {
+                    firstOperand = currentInput;
+                    currentInput = '';
+                    currentOperator = operator;
+                } else {
+                    currentInput = calculateResult().toString();
+                    currentOperator = operator;
+                }
+            } else if (firstOperand !== '') {
+                currentOperator = operator;
+            }
+        }
+
+        function calculateResult() {
+            const num1 = parseFloat(firstOperand);
+            const num2 = parseFloat(currentInput);
+
+            switch (currentOperator) {
+                case '+':
+                    return num1 + num2;
+                case '-':
+                    return num1 - num2;
+                case '*':
+                    return num1 * num2;
+                case '/':
+                    if (num2 !== 0) {
+                        return num1 / num2;
+                    } else {
+                        alert('Division by zero is not allowed.');
+                        clearDisplay();
+                        return NaN;
+                    }
+                default:
+                    return num2;
+            }
+        }
+
+        function calculate() {
+            if (currentInput !== '' && firstOperand !== '' && currentOperator !== '') {
+                currentInput = calculateResult().toString();
+                firstOperand = '';
+                currentOperator = '';
+                document.getElementById('display').value = currentInput;
+            }
+        }
+    </script>
+</body>
+</html>
